@@ -28,6 +28,7 @@ type RedisHost struct {
 	Authtype     string // "auth" or "adminauth"
 	DBType       int
 	DBFilterList map[int]struct{} // whitelist
+	SingleCompare int32
 }
 
 func (p RedisHost) String() string {
@@ -176,7 +177,7 @@ type combine struct {
 }
 
 func (c combine) String() string {
-	all := make([]string, 0, len(c.params) + 1)
+	all := make([]string, 0, len(c.params)+1)
 	all = append(all, c.command)
 	for _, ele := range c.params {
 		all = append(all, string(ele.([]byte)))

@@ -394,7 +394,14 @@ func (p *FullCheck) VerifyAllKeyInfo(allKeys <-chan []*common.Key, conflictKey c
 	}
 	defer sourceClient.Close()
 
-	targetClient, err := client.NewRedisClient(p.TargetHost, p.currentDB)
+	var targetDb int32
+	if p.TargetHost.SingleCompare != -1 {
+		targetDb = p.TargetHost.SingleCompare
+	} else {
+		targetDb = p.currentDB
+	}
+
+	targetClient, err := client.NewRedisClient(p.TargetHost, targetDb)
 	if err != nil {
 		panic(common.Logger.Errorf("create redis client with host[%v] db[%v] error[%v]",
 			p.TargetHost, p.currentDB, err))
